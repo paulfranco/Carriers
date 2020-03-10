@@ -1,16 +1,23 @@
 package co.paulfran.carriers.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
-import co.paulfran.carriers.R
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
+import co.paulfran.carriers.R
 import co.paulfran.carriers.viewmodel.ListViewModel
+import com.google.android.gms.ads.AdRequest
+import com.google.android.gms.ads.AdSize
+import com.google.android.gms.ads.AdView
+import com.google.android.gms.ads.MobileAds
 import kotlinx.android.synthetic.main.activity_main.*
 
+
 class MainActivity : AppCompatActivity() {
+    lateinit var mAdView : AdView
 
     lateinit var viewModel: ListViewModel
     private val carriersAdapter = CarrierListAdapter(arrayListOf())
@@ -18,6 +25,11 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        MobileAds.initialize(this) {}
+        mAdView = findViewById(R.id.adView)
+        val adRequest = AdRequest.Builder().build()
+        mAdView.loadAd(adRequest)
 
         viewModel = ViewModelProviders.of(this).get(ListViewModel::class.java)
         viewModel.refresh()
@@ -38,7 +50,8 @@ class MainActivity : AppCompatActivity() {
             }
         })
         viewModel.carrierLoadError.observe(this, Observer { isError ->
-            list_error.visibility = if(isError == "") View.GONE else View.VISIBLE
+            list_error.visibility = if(isError == null) View.GONE else View.VISIBLE
+            Toast.makeText(this, "Error: Data Not Found", Toast.LENGTH_SHORT).show()
         })
         viewModel.loading.observe(this, Observer { isLoading ->
             isLoading?.let {

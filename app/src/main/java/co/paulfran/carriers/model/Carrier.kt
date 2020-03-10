@@ -7,5 +7,6 @@ data class Carrier(
     val carrierName: String?,
     @SerializedName("ubi")
     val carrierUbi: String?,
+    @SerializedName("photo")
     val photo: String?
 )

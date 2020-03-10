@@ -1,5 +1,6 @@
 package co.paulfran.carriers.viewmodel
 
+import android.widget.Toast
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import co.paulfran.carriers.model.Carrier
@@ -32,8 +33,10 @@ class ListViewModel: ViewModel() {
                     carriers.value = response.body()
                     carrierLoadError.value = null
                     loading.value = false
+
                 } else {
                     onError("Error: ${response.message()}")
+
                 }
             }
         }
